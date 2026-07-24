@@ -62,32 +62,66 @@ This prefab automatically teleports the local player to their last saved checkpo
 
 - **Player Teleporter reference**: This parameter must reference the main prefab.
 
-## API
+## Developer API
 
 > [!NOTE]
-> The API below is intended for developers who want to extend the system by creating custom modules. If you only want to use the prefab in your world, you can safely ignore this section.
+> This section is intended for developers who want to extend the system by creating custom modules. If you only want to use the prefab in your world, you can safely ignore this section.
 
 I started working on an API so modules can be implemented, but it is still very bare-bones.
 
-Create a class that inherits from `IPlayerTeleporterModule`. You can then override the following methods:
+Create a class that inherits from `IPlayerTeleporterModule`. You can then override the following methods.
 
-#### public virtual bool OnLocalPlayerTeleportToPlayer(VRCPlayerApi playerToTeleportTo, PlayerCheckpoint checkpoint)
+### `OnLocalPlayerTeleportToPlayer`
 
-Called when the local player wants to teleport to `playerToTeleportTo`. `checkpoint` contains the last checkpoint reached by the other player.
+```cs
+public virtual bool OnLocalPlayerTeleportToPlayer(
+    VRCPlayerApi playerToTeleportTo,
+    PlayerCheckpoint checkpoint)
+```
 
-Note that `checkpoint` can be `null` in two cases: when there are no checkpoints, or when the other player is at the spawn point. The spawn point is treated as a virtual checkpoint and therefore has no associated `PlayerCheckpoint` instance.
+Called when the local player attempts to teleport to another player.
 
-This callback is only executed when `Teleportation Mode` is set to `Player`.
+- `playerToTeleportTo` is the player the local player wants to teleport to.
+- `checkpoint` contains the last checkpoint reached by the target player.
+- `checkpoint` is `null` if there are no checkpoints or if the target player is at the spawn point. The spawn point is treated as a virtual checkpoint and therefore has no associated `PlayerCheckpoint` instance.
+- This callback is only executed when `Teleportation Mode` is set to `Player`.
 
-**Return:** `true` to let the prefab handle the teleportation, or `false` if you want to teleport the player yourself.
+**Returns**
 
-#### public virtual bool OnLocalPlayerTeleportToPlayerCheckpoint(VRCPlayerApi playerToTeleportTo, PlayerCheckpoint checkpointToTeleportTo)
+- `true` to let the prefab handle the teleportation.
+- `false` if your module will handle the teleportation instead.
 
-Similar to `OnLocalPlayerTeleportToPlayer`, except this callback is only executed when `Teleportation Mode` is set to `Checkpoint`.
+### `OnLocalPlayerTeleportToPlayerCheckpoint`
 
-#### public virtual void OnPlayerEnteredCheckpoint(VRCPlayerApi player, PlayerCheckpoint checkpoint)
+```cs
+public virtual bool OnLocalPlayerTeleportToPlayerCheckpoint(
+    VRCPlayerApi playerToTeleportTo,
+    PlayerCheckpoint checkpointToTeleportTo)
+```
 
-Called when player `player` enters checkpoint `checkpoint`.
+Called when the local player attempts to teleport to the last checkpoint reached by another player.
+
+- `playerToTeleportTo` is the player the local player wants to teleport to.
+- `checkpointToTeleportTo` is the checkpoint the player will be teleported to.
+- This callback is only executed when `Teleportation Mode` is set to `Checkpoint`.
+
+**Returns**
+
+- `true` to let the prefab handle the teleportation.
+- `false` if your module will handle the teleportation instead.
+
+### `OnPlayerEnteredCheckpoint`
+
+```cs
+public virtual void OnPlayerEnteredCheckpoint(
+    VRCPlayerApi player,
+    PlayerCheckpoint checkpoint)
+```
+
+Called when a player enters a checkpoint.
+
+- `player` is the player who entered the checkpoint.
+- `checkpoint` is the checkpoint that was entered.
 
 ## Public methods
 
