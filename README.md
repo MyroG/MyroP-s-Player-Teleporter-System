@@ -7,8 +7,8 @@ This is a system that allows players to teleport to other players in the instanc
 - Download and import the Unity package file, which can be found on the Releases page.
 - Drag and drop the `PlayerTeleporter` prefab into your scene.
 - If you want to add checkpoints to your world, drag and drop the `Checkpoint` prefab into your scene, select the GameObject, and on the `PlayerCheckpoint` component, make sure it references the `PlayerTeleporter` prefab.
-- If you want players to become reachable or unreachable in specific areas of your world, drag and drop the `PlayerReachableSetter` prefab into your scene and configure it as described below.
-- Settings are described below.
+- If you want players to become reachable or unreachable in specific areas of your world, drag and drop the `PlayerReachableSetter` prefab into your scene and configure it.
+- All prefabs and modules you can add to your scene are described below under the "Settings" chapter.
 
 **Note:**
 - If you need to toggle the system on and off, do not toggle the entire `PlayerTeleporter` prefab. Instead, toggle the `Canvas` child GameObject of `PlayerTeleporter`. Disabling the entire GameObject will also disable important scripts.
@@ -24,9 +24,11 @@ The prefab can be customized using the settings and prefabs below.
 
 - **Teleportation Mode**: If this setting is set to `Player`, players will teleport directly to other players. If it is set to `Checkpoint`, players will teleport to the last checkpoint reached by the target player.
 - **Event sender when the player respawns**: If needed, an event defined in `Event Name Respawn` can be sent to the GameObject referenced in `Event Behaviour Respawn` whenever the local player respawns. This can be useful if, for example, you want to enable the spawn area when the player respawns. This setting is rarely needed, but it can be useful in some cases.
-- Players that cannot currently be teleported to (for example, because they entered a `PlayerReachableSetter` configured as unreachable) will have their teleport button grayed out.
+- Players that cannot currently be teleported to will have their teleport button grayed out.
 
 ### POPlayerTeleporter
+
+This prefab represents a single entry in the player list. It displays the name and the location of the player and provides the button used to teleport to them. The UI can be freely customized to match your world's style.
 
 - **Player Teleporter reference**: This parameter must reference the main prefab.
 - **Show player location**: If you want to show the player's location on the panel, locations can be defined using checkpoints. If you are not using any checkpoints, you can leave this setting disabled.
@@ -44,7 +46,7 @@ The prefab can be customized using the settings and prefabs below.
 If your world contains spoiler-heavy areas, you may not want newly joined players to teleport directly to someone who has already reached them. This prefab allows you to make players reachable or unreachable when they enter the trigger.
 
 - **Player Teleporter reference**: This parameter must reference the main prefab.
-- **Is Reachable**: When a player enters the trigger, if this parameter is set to `true`, other players can teleport to them again. If set to `false`, they cannot.
+- **Is Reachable**: When a player enters the trigger, if this parameter is set to `true`, other players can teleport to them again. If set to `false`, they cannot (this will disable the "Teleport" button).
 
 ### TeleportToCheckpoint
 
