@@ -3,6 +3,17 @@
 This is a system that allows players to teleport to other players in the instance. The system also features a checkpoint system, allowing players to teleport to checkpoints instead.
 If you want to try the system out, it is used in my NUCLEUS II world https://vrchat.com/home/world/wrld_362befbb-f431-4c46-a4c5-5d631c7420eb.
 
+## Features
+
+Using this system, you can for example:
+
+- Teleport directly to another player, or to the last checkpoint they reached.
+- Teleport to a specific checkpoint by interacting with a button.
+- Automatically teleport the local player to their last saved checkpoint when they rejoin the instance.
+- Prevent players from being teleported to after they reach certain areas (for example, to avoid spoilers).
+- Display each player's current location in the teleport menu.
+- Extend the system with custom behavior through the API. For example, in my VRChat world **NUCLEUS II**, I use the API to enable and disable certain areas based on the checkpoints reached by the local player.
+
 ## Installation
 
 - Download and import the Unity package file, which can be found on the Releases page.
@@ -20,8 +31,8 @@ If you want to try the system out, it is used in my NUCLEUS II world https://vrc
 ## Demo scene
 
 In the folder `DemoTeleporter`, you can find a very small demo scene :
-- There's a teleport panel and one checkpoint.
-- Clicking on the white cube (which is the module `TeleportToCheckpoint`) teleports you to that checkpoint.
+- There's a teleport panel and a few checkpoints.
+- Clicking on the white cube (which is the module `TeleportToCheckpoint`) teleports you to the last checkpoint.
 - Rejoining the instance makes you teleport to the last checkpoint you went through (this is handled by the `TeleportToLastCheckpointPersistence` module)
 
 ## Settings
@@ -31,6 +42,7 @@ The prefab can be customized using the settings and modules, the prefabs can be 
 ### PlayerTeleporter
 
 - **Teleportation Mode**: If this setting is set to `Player`, players will teleport directly to other players. If it is set to `Checkpoint`, players will teleport to the last checkpoint reached by the target player.
+- **Spawn name**: The name of the spawn, which will be shown on the panel if the player is located in the spawn area.
 - **Event sender when the player respawns**: If needed, an event defined in `Event Name Respawn` can be sent to the GameObject referenced in `Event Behaviour Respawn` whenever the local player respawns. This can be useful if, for example, you want to enable the spawn area when the player respawns. This setting is rarely needed, but it can be useful in some cases.
 - Players that cannot currently be teleported to will have their teleport button grayed out.
 
@@ -139,8 +151,10 @@ The following public methods can safely be called from the `PlayerTeleporter` pr
 - `void TeleportLocalPlayerToPlayer(VRCPlayerApi player)`
 - `void TeleportLocalPlayerToCheckpoint(PlayerCheckpoint checkpoint)`
 - `void ExecuteCheckpointEvent(PlayerCheckpoint checkpoint)`: Executes the **Event senders...** events of the specified checkpoint. If `checkpoint` is `null`, the respawn event defined on the main prefab is triggered.
-- `_TeleportLocalPlayerToLastKnownCheckpoint()`
-- `_GetPlayerObjectOfPlayer(VRCPlayerApi player)`: Returns the `PlayerObject` associated with the specified player. This is useful if you need to access their persistent data.
+- `void _TeleportLocalPlayerToLastKnownCheckpoint()`: Teleports the player to the last saved checkpoint
+- `void _TeleportLocalPlayerToCheckpointAtIndex(int index)`: Teleports the player to the n-th (index) saved checkpoint. index should be between 0 and 7
+- `PlayerRow _GetPlayerObjectOfPlayer(VRCPlayerApi player)`: Returns the `PlayerObject` associated with the specified player. This is useful if you need to access their persistent data.
+- `PlayerCheckpoint GetCheckpointOfPlayerAtIndex(VRCPlayerApi player, int index)`: Returns one of the player's previously reached checkpoints. An index of `0` returns the most recently reached checkpoint, `1` the previous one, `2` the one before that, and so on. If the returned checkpoint is the spawn point, the method returns `null`, since the spawn point is represented as a virtual checkpoint. This means that if the player has just respawned, calling this method with an index of `0` will return `null`. index should be between 0 and 7
 
 ## Credits
 

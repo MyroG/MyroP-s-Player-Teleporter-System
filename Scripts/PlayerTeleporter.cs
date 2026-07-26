@@ -21,6 +21,7 @@ namespace myro.teleporter
 	{
 
 		public ETeleportationMode TeleportationMode;
+		public string SpawnName = "SPAWN";
 
 		private DataList _registeredCheckpoints;
 		private DataDictionary _playerRows;
@@ -164,11 +165,16 @@ namespace myro.teleporter
 
 		public void _TeleportLocalPlayerToLastKnownCheckpoint()
 		{
+			_TeleportLocalPlayerToCheckpointAtIndex(0);
+		}
+
+		public void _TeleportLocalPlayerToCheckpointAtIndex(int index)
+		{
 			PlayerRow playerLocator = _GetPlayerObjectOfPlayer(Networking.LocalPlayer);
 			if (playerLocator == null)
 				return;
 
-			int lastKnownLocation = playerLocator.GetPlayerLocationIdAt(1);
+			int lastKnownLocation = playerLocator.GetPlayerLocationIdAt(index);
 
 			if (lastKnownLocation <= 0)
 				_RespawnLocalPlayer();
@@ -185,6 +191,21 @@ namespace myro.teleporter
 			Networking.LocalPlayer.Respawn();
 			
 			_ExecuteRespawnEvent();
+		}
+
+		public PlayerCheckpoint GetCheckpointOfPlayerAtIndex(VRCPlayerApi player, int index)
+		{
+			PlayerRow playerObject = _GetPlayerObjectOfPlayer(player);
+
+			if (playerObject == null)
+				return null;
+
+			int id = playerObject.GetPlayerLocationIdAt(index, true);
+
+			if (id < 0)
+				return null;
+
+			return _GetCheckpoint(id);
 		}
 
 		private void _ExecuteRespawnEvent()

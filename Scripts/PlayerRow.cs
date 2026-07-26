@@ -76,7 +76,7 @@ namespace myro.teleporter
 
 			if (id == 0)
 			{
-				PlayerLocation.text = "spawn";
+				PlayerLocation.text = PlayerTeleporterReference.SpawnName;
 			}
 			else
 			{
