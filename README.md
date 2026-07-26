@@ -1,6 +1,7 @@
 # MyroP's Player Teleporter System
 
 This is a system that allows players to teleport to other players in the instance. The system also features a checkpoint system, allowing players to teleport to checkpoints instead.
+If you want to try the system out, it is used in my NUCLEUS II world https://vrchat.com/home/world/wrld_362befbb-f431-4c46-a4c5-5d631c7420eb.
 
 ## Installation
 
@@ -16,9 +17,16 @@ This is a system that allows players to teleport to other players in the instanc
 - Since the data is persisted using PlayerObjects, do not regenerate Network IDs if you encounter Network ID-related issues, as this will clear the persistent data. Network IDs have a tendency to break due to a long-standing VRC SDK bug.
 - Adding more checkpoints may invalidate the currently saved persistent data.
 
+## Demo scene
+
+In the folder `DemoTeleporter`, you can find a very small demo scene :
+- There's a teleport panel and one checkpoint.
+- Clicking on the white cube (which is the module `TeleportToCheckpoint`) teleports you to that checkpoint.
+- Rejoining the instance makes you teleport to the last checkpoint you went through (this is handled by the `TeleportToLastCheckpointPersistence` module)
+
 ## Settings
 
-The prefab can be customized using the settings and prefabs below.
+The prefab can be customized using the settings and modules, the prefabs can be found in the `Module` folder 
 
 ### PlayerTeleporter
 
